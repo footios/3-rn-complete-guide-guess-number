@@ -11,8 +11,17 @@ const StartGameScreen = (props) => {
 	const [ confirmed, setConfirmed ] = useState(false);
 	const [ selectedNumber, setSelectedNumber ] = useState();
 
-	const numberInputHandler = (inputText) => {
-		setEnteredValue(inputText.replace(/[^0-9]/g, ''));
+	const numberInputHandler = (event) => {
+		//NOT WORKING 
+		// strange! 
+		// docs: { nativeEvent: { eventCount, target, text} }
+		// this should work but I get an error...
+		const { text } = event.nativeEvent;
+		console.log(text)
+		if (text === /[A-Z][a-z]/){
+			return;
+		}
+		setEnteredValue(event.target);
 	};
 
 	const resetInputHandler = () => {
