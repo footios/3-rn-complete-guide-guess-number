@@ -6,36 +6,41 @@ import Card from '../components/Card';
 
 // outside because it shouldn't be recreated in every rerendering...
 const findNumber = (min, max, usersChoice) => {
-	let foundNumber = usersChoice;
-
+	let counter = 0;
+	let foundNumber = 0;
+	
 	min = Math.ceil(min);
 	max = Math.floor(max);
-
+	
 	if (foundNumber === usersChoice) {
+		counter++;
 		return foundNumber;
 	} else {
 		// use the divide and conquer algo:
 		// find the middle number
 		mid = Math.floor((min + max) / 2);
-
+		
 		// compare middle number with chosen num
 		if (foundNumber === usersChoice) {
+			counter++;
+			console.log(counter)
 			return foundNumber;
 		}
 		// if number at mid is greate than x,
 		// search in the left half of mid
 		if (mid > usersChoice) {
+			counter++;
 			findNumber(min, mid-1);
 		} else {
 			// else search in the right half...
+			counter++;
 			return findNumber(mid+1, max);
 		}
 		return foundNumber;
 	}
+	
 };
 const GameScreen = (props) => {
-
-	
 
 	const [ currentGuess, setCurrentGuess ] = useState(findNumber(1, 100, props.userChoice));
 	const [ rounds, settRounds ] = useState(0);
@@ -53,8 +58,6 @@ const GameScreen = (props) => {
 		},
 		[ currentGuess, userChoice, onGameOver ]
 	);
-
-	
 
 	const nextGuessHandler = (direction) => {
 		const shouldBeLower = direction === 'lower' && currentGuess < props.userChoice;
