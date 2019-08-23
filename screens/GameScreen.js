@@ -5,18 +5,39 @@ import NumberContainer from '../components/NumberContainer';
 import Card from '../components/Card';
 
 // outside because it shouldn't be recreated in every rerendering...
-const generateRandomBetween = (min, max, exclude) => {
+const findNumber = (min, max, usersChoice) => {
+	let foundNumber = usersChoice;
+
 	min = Math.ceil(min);
 	max = Math.floor(max);
-	const rndNum = Math.floor(Math.random() * (max - min) + min);
-	if (rndNum === exclude) {
-		return generateRandomBetween(min, max, exclude);
+
+	if (foundNumber === usersChoice) {
+		return foundNumber;
 	} else {
-		return rndNum;
+		// use the divide and conquer algo:
+		// find the middle number
+		mid = Math.floor((min + max) / 2);
+
+		// compare middle number with chosen num
+		if (foundNumber === usersChoice) {
+			return foundNumber;
+		}
+		// if number at mid is greate than x,
+		// search in the left half of mid
+		if (mid > usersChoice) {
+			findNumber(min, mid-1);
+		} else {
+			// else search in the right half...
+			return findNumber(mid+1, max);
+		}
+		return foundNumber;
 	}
 };
 const GameScreen = (props) => {
-	const [ currentGuess, setCurrentGuess ] = useState(generateRandomBetween(1, 100, props.userChoice));
+
+	
+
+	const [ currentGuess, setCurrentGuess ] = useState(findNumber(1, 100, props.userChoice));
 	const [ rounds, settRounds ] = useState(0);
 
 	const currentLow = useRef(1);
@@ -32,6 +53,9 @@ const GameScreen = (props) => {
 		},
 		[ currentGuess, userChoice, onGameOver ]
 	);
+
+	
+
 	const nextGuessHandler = (direction) => {
 		const shouldBeLower = direction === 'lower' && currentGuess < props.userChoice;
 		const shouldBeGreater = direction === 'greater' && currentGuess > props.userChoice;
@@ -48,7 +72,7 @@ const GameScreen = (props) => {
 		} else {
 			currentLow.current = currentGuess;
 		}
-		const nextNumber = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess);
+		const nextNumber = findNumber(currentLow.current, currentHigh.current, currentGuess);
 		setCurrentGuess(nextNumber);
 		settRounds((curRounds) => curRounds + 1);
 	};
