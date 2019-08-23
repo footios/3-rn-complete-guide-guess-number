@@ -5,41 +5,38 @@ import NumberContainer from '../components/NumberContainer';
 import Card from '../components/Card';
 
 // outside because it shouldn't be recreated in every rerendering...
-const findNumber = (min, max, usersChoice) => {
-	let counter = 0;
-	let foundNumber = 0;
+// The function is working fine and it finds the right number automatically.
+// So there is no need to give hints.
+// The logic off the app is different, so this cannot be applied.
+const findNumber = function(min, max, x) {
+	let counter = 0
 	
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	
-	if (foundNumber === usersChoice) {
-		counter++;
-		return foundNumber;
-	} else {
-		// use the divide and conquer algo:
-		// find the middle number
-		mid = Math.floor((min + max) / 2);
+	let num = 0;
+	let start = min,
+	  end = max;
+  
+	// Iterate while start not meets end
+	while (start <= end) {
+	  // Find the mid index
+	  
+	  let mid = Math.floor((start + end) / 2);
+  
+	  // If element is present at mid, return True
+	  if (mid === x) {
 		
-		// compare middle number with chosen num
-		if (foundNumber === usersChoice) {
-			counter++;
-			console.log(counter)
-			return foundNumber;
-		}
-		// if number at mid is greate than x,
-		// search in the left half of mid
-		if (mid > usersChoice) {
-			counter++;
-			findNumber(min, mid-1);
-		} else {
-			// else search in the right half...
-			counter++;
-			return findNumber(mid+1, max);
-		}
-		return foundNumber;
+		num = mid;
+		return num;
+	  }
+	  // Else look in left or right half accordingly
+	  else if (mid < x) start = mid + 1;
+	  else end = mid - 1;
+  console.log("mid", mid, "start", start, end)
+  counter++;
+	 console.log('counter', counter)
 	}
-	
-};
+	return num;
+  };
+
 const GameScreen = (props) => {
 
 	const [ currentGuess, setCurrentGuess ] = useState(findNumber(1, 100, props.userChoice));
