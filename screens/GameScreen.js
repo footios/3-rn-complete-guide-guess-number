@@ -5,19 +5,18 @@ import NumberContainer from '../components/NumberContainer';
 import Card from '../components/Card';
 
 // outside because it shouldn't be recreated in every rerendering...
+const getMiddleNumber = function(min, max, exclude) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
 
-const GameScreen = (props) => {
-	const getMiddleNumber = function(min, max, exclude) {
-		min = Math.ceil(min);
-		max = Math.floor(max);
-	
-		let middleNumber = Math.floor((min + max) / 2);
-		if (middleNumber === exclude) {
-			middleNumber = Math.floor(Math.random() * (max - min) + min)
-		};
-		  return middleNumber; 
+	let middleNumber = Math.floor((min + max) / 2);
+	if (middleNumber === exclude) {
+		middleNumber = Math.floor(Math.random() * (max - min) + min)
+	} else {
+		return middleNumber; 
 	}
-	
+}
+const GameScreen = (props) => {	
 	const [ currentGuess, setCurrentGuess ] = useState(getMiddleNumber(1, 100, props.userChoice));
 	const [ rounds, settRounds ] = useState(0);
 
