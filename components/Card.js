@@ -7,6 +7,7 @@ const Card = (props) => {
 
 const styles = StyleSheet.create({
 	card: {
+		margin: 10, 
 		shadowColor: 'black',
 		shadowOffset: {
 			width: 0,
@@ -17,7 +18,6 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		// elevation: (android) uses the default from material design
 		elevation: 5,
-	
 		borderRadius: 10
 		// target individual corners with borderBottomLeftRadius etc.
 	}
