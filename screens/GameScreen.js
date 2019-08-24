@@ -17,7 +17,8 @@ const generateRandomBetween = (min, max, exclude) => {
 	}
 };
 const GameScreen = (props) => {
-	const [ currentGuess, setCurrentGuess ] = useState(generateRandomBetween(1, 100, props.userChoice));
+	const [ currentGuess, setCurrentGuess ] = useState(
+		generateRandomBetween(1, 100, props.userChoice));
 	const [ rounds, settRounds ] = useState(0);
 
 	const currentLow = useRef(1);
@@ -43,6 +44,7 @@ const GameScreen = (props) => {
 					style: 'cancel'
 				}
 			]);
+			return;
 		}
 		if (direction === 'lower') {
 			currentHigh.current = currentGuess;
