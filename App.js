@@ -9,48 +9,49 @@ import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 
 const fetchFonts = () => {
-	// returns a promise
 	return Font.loadAsync({
-		'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-		'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+	  'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+	  'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
 	});
-};
+  };
 
 export default function App() {
 	const [ userNumber, setUserNumber ] = useState();
 	const [ guessRounds, setGuessRounds ] = useState(0);
 	const [ dataLoaded, setDataLoaded ] = useState(false);
+	
 
 	if (!dataLoaded) {
-		// AppLoading prolongs the splash screen...
-		return <AppLoading 
-		startAsync={fetchFonts} // point at operation to start on 1st render
-		onFinish={() => setDataLoaded(true)} 
-		onError={() => console.log(err)} />
-	}
+		fetchFonts()
+		.then(() => setDataLoaded(true))
+		.catch(err => console.log(err))
+	} 
 
-	const configureNewGameHandler = () => {
-		setGuessRounds(0);
-		setUserNumber(null);
-	};
-
-	const startGameHandler = (selectedNumber) => {
-		setUserNumber(selectedNumber);
-	};
-
-	const gameOverHandler = (numOfRounds) => {
-		setGuessRounds(numOfRounds);
-	};
-
-	let content = <StartGameScreen onStartGame={startGameHandler} />;
-	if (userNumber && guessRounds <= 0) {
-		content = <GameScreen userChoice={userNumber} onGameOver={gameOverHandler} />;
-	} else if (guessRounds > 0) {
-		content = (
-			<GameOverScreen roundsNumber={guessRounds} userNumber={userNumber} onRestart={configureNewGameHandler} />
-		);
-	}
-
+		const configureNewGameHandler = () => {
+			setGuessRounds(0);
+			setUserNumber(null);
+		};
+	
+		const startGameHandler = (selectedNumber) => {
+			setUserNumber(selectedNumber);
+		};
+	
+		const gameOverHandler = (numOfRounds) => {
+			setGuessRounds(numOfRounds);
+		};
+	
+		let content;
+		if (dataLoaded) {
+			content = <StartGameScreen onStartGame={startGameHandler} />;
+		}
+		else if (userNumber && guessRounds <= 0 && dataLoaded) {
+			content = <GameScreen userChoice={userNumber} onGameOver={gameOverHandler} />;
+		} else if (guessRounds > 0 && dataLoaded) {
+			content = (
+				<GameOverScreen roundsNumber={guessRounds} userNumber={userNumber} onRestart={configureNewGameHandler} />
+			);
+		}
+	
 	return (
 		<View style={styles.screen}>
 			<Header title="Guess a number " />
