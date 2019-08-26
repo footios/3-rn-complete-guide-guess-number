@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, Button, Alert } from 'react-native';
 import NumberContainer from '../components/NumberContainer';
 import Card from '../components/Card';
 import DefaultStyles from '../constants/default-styles';
- 
+
 // outside because it shouldn't be recreated in every rerendering...
 const generateRandomBetween = (min, max, exclude) => {
 	min = Math.ceil(min);
@@ -17,10 +17,9 @@ const generateRandomBetween = (min, max, exclude) => {
 	}
 };
 const GameScreen = (props) => {
-	const [ currentGuess, setCurrentGuess ] = useState(
-		generateRandomBetween(1, 100, props.userChoice));
+	const [ currentGuess, setCurrentGuess ] = useState(generateRandomBetween(1, 100, props.userChoice));
+	
 	const [ rounds, settRounds ] = useState(0);
-
 	const currentLow = useRef(1);
 	const currentHigh = useRef(100);
 
@@ -57,7 +56,7 @@ const GameScreen = (props) => {
 	};
 	return (
 		<View style={styles.screen}>
-			<Text style={DefaultStyles.title } >Opponent's Guess: </Text>
+			<Text style={DefaultStyles.title}>Opponent's Guess: </Text>
 			<NumberContainer>{currentGuess}</NumberContainer>
 			<Card style={styles.buttonContainer}>
 				<View style={styles.button}>

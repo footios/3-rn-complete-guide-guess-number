@@ -1,14 +1,14 @@
 import React from 'react'
-import { View, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 const BodyText = props => {
     return (
-        <Text style={styles.title} >{props.children}</Text>
+        <Text style={{...styles.body, ...props.style}} >{props.children}</Text>
     );
 }
 
 const styles = StyleSheet.create({
-    title: {
+    body: {
 		fontFamily: 'open-sans'
 	}
 })
