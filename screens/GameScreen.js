@@ -4,6 +4,7 @@ import { View, StyleSheet, Text, Button, Alert } from 'react-native';
 import NumberContainer from '../components/NumberContainer';
 import Card from '../components/Card';
 import DefaultStyles from '../constants/default-styles';
+import MainButton from '../components/MainButton';
 
 // outside because it shouldn't be recreated in every rerendering...
 const generateRandomBetween = (min, max, exclude) => {
@@ -18,7 +19,7 @@ const generateRandomBetween = (min, max, exclude) => {
 };
 const GameScreen = (props) => {
 	const [ currentGuess, setCurrentGuess ] = useState(generateRandomBetween(1, 100, props.userChoice));
-	
+
 	const [ rounds, settRounds ] = useState(0);
 	const currentLow = useRef(1);
 	const currentHigh = useRef(100);
@@ -60,10 +61,10 @@ const GameScreen = (props) => {
 			<NumberContainer>{currentGuess}</NumberContainer>
 			<Card style={styles.buttonContainer}>
 				<View style={styles.button}>
-					<Button title="LOWER" onPress={nextGuessHandler.bind(this, 'lower')} />
+					<MainButton onPress={nextGuessHandler.bind(this, 'lower')}>LOWER</MainButton>
 				</View>
 				<View style={styles.button}>
-					<Button title="GREATER" onPress={nextGuessHandler.bind(this, 'greater')} />
+					<MainButton onPress={nextGuessHandler.bind(this, 'greater')}>GREATER</MainButton>
 				</View>
 			</Card>
 		</View>
@@ -80,8 +81,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 		marginTop: 20,
-		width: 300,
-		maxWidth: '80%'
+		width: 400,
+		maxWidth: '90%',
+		
 	},
 	button: {
 		width: '40%',
