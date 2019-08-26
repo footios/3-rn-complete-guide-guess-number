@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, Alert, ScrollView, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import NumberContainer from '../components/NumberContainer';
@@ -21,10 +21,11 @@ const generateRandomBetween = (min, max, exclude) => {
 };
 
 // This func rendrers the list of guesses.
-const renderListItem = (value, numberOfRounds) => (
-	<View style={styles.listItem} key={value}>
-		<BodyText>#{numberOfRounds}</BodyText>
-		<BodyText>{value}</BodyText>
+// The first arg is the one you pass with 'bind'.
+const renderListItem = (listLength, itemData) => (
+	<View style={styles.listItem}>
+		<BodyText>#{listLength - itemData.index}</BodyText>
+		<BodyText>{itemData.item}</BodyText>
 	</View>
 );
 
@@ -32,7 +33,7 @@ const GameScreen = (props) => {
 	const initialGuess = generateRandomBetween(1, 100, props.userChoice);
 
 	const [ currentGuess, setCurrentGuess ] = useState(initialGuess);
-	const [ pastGuesses, setPastGuesses ] = useState([ initialGuess ]);
+	const [ pastGuesses, setPastGuesses ] = useState([ initialGuess.toString() ]);
 	const currentLow = useRef(1);
 	const currentHigh = useRef(100);
 
@@ -68,7 +69,8 @@ const GameScreen = (props) => {
 		setCurrentGuess(nextNumber);
 		// currentGuess wouldn't work, because React wouldn't have updated
 		// the state and rebuild the component
-		setPastGuesses((currentGuess) => [ nextNumber, ...pastGuesses ]);
+		// By mistake I had ...pastGuesses and it worked!
+		setPastGuesses((curPastGuesses) => [ nextNumber.toString(), ...curPastGuesses ]);
 	};
 	return (
 		<View style={styles.screen}>
@@ -87,10 +89,20 @@ const GameScreen = (props) => {
 				</View>
 			</Card>
 			<View style={styles.listContainer}>
+				<FlatList
+					// use it if you don't know how many items...
+					// It expects objs with key and value pairs
+					keyExtractor={(item) => item} // we can do 'parseInt(item) + 1'
+					data={pastGuesses}
+					// renderItem expects only 1 arg, but with 'bind' we can add more....
+					// The 2nd arg will be the 1st received be the func
+					renderItem={renderListItem.bind(this, pastGuesses.length)}
+					contentContainerStyle={styles.list}
+				/>
 				{/* we subtract the index from pastGuesses.length to have the last index by the last guess */}
-				<ScrollView contentContainerStyle={styles.list}>
+				{/* <ScrollView contentContainerStyle={styles.list}>
 					{pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}
-				</ScrollView>
+				</ScrollView> */}
 			</View>
 		</View>
 	);
@@ -116,23 +128,23 @@ const styles = StyleSheet.create({
 	listItem: {
 		flexDirection: 'row',
 		justifyContent: 'space-around',
-		alignItems: 'center',
+		// alignItems: 'center',
 		borderColor: '#ccc',
 		borderWidth: 1,
 		padding: 15,
 		marginVertical: 10,
 		backgroundColor: 'white',
-		width: '60%'
+		width: '100%'
 	},
 	listContainer: {
 		flex: 1, // this is to scroll on android
-		width: '80%'
+		width: '60%'
 	},
 	list: {
-		// flex: 1, // does do the job: starts list from bottom but is not scrollable 
+		// flex: 1, // does the job: starts list from bottom but is not scrollable
 		flexGrow: 1,
-		alignItems: 'center',
-		justifyContent:'flex-end'
+		// alignItems: 'center', // not needed when listItem takes all of list's width
+		justifyContent: 'flex-end'
 	}
 });
 
