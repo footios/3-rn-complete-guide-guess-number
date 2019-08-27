@@ -8,6 +8,11 @@ import StartGameScreen from './screens/StartGameScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 
+// What we wanted to do here is already the way the instructor used,
+// in the master branch. 
+// Of course he used `Font.loadAsync` to load the fonts,
+// and I think is the only way to load fonts from expo.
+
 export default function App() {
 	const [ userNumber, setUserNumber ] = useState();
 	const [ guessRounds, setGuessRounds ] = useState(0);
