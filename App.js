@@ -13,23 +13,16 @@ export default function App() {
 	const [ guessRounds, setGuessRounds ] = useState(0);
 	const [ dataLoaded, setDataLoaded ] = useState(false);
 
+	useEffect(() => {
+		(async () => {
+		  await Font.loadAsync({
+			'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+			'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+		  });
+		  setDataLoaded(true);
+		})()
+	  }, []);
 	
-	useEffect(async () => {
-			fetchFonts = await Font.loadAsync({
-				'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-				'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
-			});
-			setDataLoaded(true)
-	}, []);
-
-
-	if (!dataLoaded) {
-		// AppLoading prolongs the splash screen...
-		return <AppLoading 
-		startAsync={fetchFonts} // point at operation to start on 1st render
-		onFinish={() => setDataLoaded(true)} 
-		onError={() => console.log(err)} />
-	}
 
 	const configureNewGameHandler = () => {
 		setGuessRounds(0);
@@ -44,17 +37,18 @@ export default function App() {
 		setGuessRounds(numOfRounds);
 	};
 
-	let content;
-		if (dataLoaded) {
-			content = <StartGameScreen onStartGame={startGameHandler} />;
-		}
-		else if (userNumber && guessRounds <= 0) {
-			content = <GameScreen userChoice={userNumber} onGameOver={gameOverHandler} />;
-		} else if (guessRounds > 0 && dataLoaded) {
-			content = (
-				<GameOverScreen roundsNumber={guessRounds} userNumber={userNumber} onRestart={configureNewGameHandler} />
-			);
-		}
+	let content
+	if (dataLoaded) {
+		content = <StartGameScreen onStartGame={startGameHandler} />;
+	}
+
+	if (userNumber && guessRounds <= 0 && dataLoaded) {
+		content = <GameScreen userChoice={userNumber} onGameOver={gameOverHandler} />;
+	} else if (guessRounds > 0 && dataLoaded) {
+		content = (
+			<GameOverScreen roundsNumber={guessRounds} userNumber={userNumber} onRestart={configureNewGameHandler} />
+		);
+	}
 
 	return (
 		<View style={styles.screen}>
