@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Button, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import { View, StyleSheet, Dimensions, Button, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 
 import Card from '../components/Card';
 import Colors from '../constants/colors';
@@ -97,8 +97,9 @@ const styles = StyleSheet.create({
 		fontFamily: 'open-sans-bold'
 	},
 	inputContainer: {
-		width: 300,
-		maxWidth: '80%',
+		width: '80%',
+		minWidth: 300,   
+		maxWidth: '95 %',
 		alignItems: 'center'
 	},
 	buttonContainer: {
@@ -108,7 +109,10 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 15
 	},
 	button: {
-		width: '40%',
+		// width: '40%',
+		// difference only for android: window = status bar height excluded, screen = not...
+		// '40%' would do the same job, but here we introduce Dimensions
+		width: Dimensions.get('window').width / 4, // each button gets the 1 fourth width of device
 		margin: 10
 	},
 	input: {

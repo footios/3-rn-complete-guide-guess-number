@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
 		margin: 10
 	},
 	image: {
+		// put width and height to 100% and control image from imageContainer
 		width: '100%',
 		height: '100%'
 	},

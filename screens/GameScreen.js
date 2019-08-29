@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, Alert, ScrollView, FlatList } from 'react-native';
+import { View, StyleSheet, Text, Alert, Dimensions, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import NumberContainer from '../components/NumberContainer';
@@ -72,6 +72,11 @@ const GameScreen = (props) => {
 		// By mistake I had ...pastGuesses and it worked!
 		setPastGuesses((curPastGuesses) => [ nextNumber.toString(), ...curPastGuesses ]);
 	};
+
+	let listContainerStyle = styles.listContainer;
+	if (Dimensions.get('window').width > 350) {
+		listContainerStyle = styles.listContainerBig;
+	}
 	return (
 		<View style={styles.screen}>
 			<Text style={DefaultStyles.title}>Opponent's Guess: </Text>
@@ -88,7 +93,7 @@ const GameScreen = (props) => {
 					</MainButton>
 				</View>
 			</Card>
-			<View style={styles.listContainer}>
+			<View style={listContainerStyle}>
 				<FlatList
 					// use it if you don't know how many items...
 					// It expects objs with key and value pairs
@@ -138,6 +143,10 @@ const styles = StyleSheet.create({
 	},
 	listContainer: {
 		flex: 1, // this is to scroll on android
+		width: '80%'
+	},
+	listContainerBig: {
+		flex: 1,
 		width: '60%'
 	},
 	list: {
