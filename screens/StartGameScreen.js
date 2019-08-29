@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -19,10 +19,14 @@ import BodyText from '../components/BodyText';
 import TitleText from '../components/TitleText';
 import MainButton from '../components/MainButton';
 
+// Bug: The width of our buttons get locked-in at start
+// and don't adjust when the screen size changes (landscape/portrait).
+
 const StartGameScreen = (props) => {
 	const [ enteredValue, setEnteredValue ] = useState('');
 	const [ confirmed, setConfirmed ] = useState(false);
 	const [ selectedNumber, setSelectedNumber ] = useState();
+	const [ buttonWidth, setButtonWidth ] = useState(Dimensions.get('window').width / 4);
 
 	const numberInputHandler = (inputText) => {
 		setEnteredValue(inputText.replace(/[^0-9]/g, ''));
@@ -32,6 +36,24 @@ const StartGameScreen = (props) => {
 		setEnteredValue('');
 		setConfirmed(false);
 	};
+
+	// When the 'Dimensions' change, the `updateLayout` will be called.
+	// In order to calulate `Dimensions` whenever the component renders,
+	// we'll use the `useEffect` hook.
+	useEffect(() => {
+		const updateLayout = () => {
+			// here we just give the buttons again their width,
+			// so they will adjust on the device orientation
+			setButtonWidth(Dimensions.get('window').width / 4);
+		};
+
+		Dimensions.addEventListener('change', updateLayout);
+
+		// clean up in `return`
+		return () => {
+			Dimensions.removeEventListener('change', updateLayout);
+		};
+	});
 
 	const confirmInputHandler = () => {
 		const chosenNumber = parseInt(enteredValue);
@@ -65,7 +87,7 @@ const StartGameScreen = (props) => {
 	return (
 		<ScrollView>
 			{/* 'position' works better on iOS and 'padding' on android */}
-			<KeyboardAvoidingView behavior="position" keyboardVerticalOffset={30} > 
+			<KeyboardAvoidingView behavior="position" keyboardVerticalOffset={30}>
 				<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 					<View style={styles.screen}>
 						<TitleText style={styles.title}>Start a New Game!</TitleText>
@@ -82,10 +104,10 @@ const StartGameScreen = (props) => {
 								value={enteredValue}
 							/>
 							<View style={styles.buttonContainer}>
-								<View style={styles.button}>
+								<View style={{ width: buttonWidth, margin: 10 }}>
 									<Button color={Colors.reset} title="Reset" onPress={resetInputHandler} />
 								</View>
-								<View style={styles.button}>
+								<View style={{ width: buttonWidth, margin: 10 }}>
 									<Button color={Colors.confirm} title="Confirm" onPress={confirmInputHandler} />
 								</View>
 							</View>
@@ -121,13 +143,13 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		paddingHorizontal: 15
 	},
-	button: {
-		// width: '40%',
-		// difference only for android: window = status bar height excluded, screen = not...
-		// '40%' would do the same job, but here we introduce Dimensions
-		width: Dimensions.get('window').width / 4, // each button gets the 1 fourth width of device
-		margin: 10
-	},
+	// button: {
+	// 	// width: '40%',
+	// 	// difference only for android: window = status bar height excluded, screen = not...
+	// 	// '40%' would do the same job, but here we introduce Dimensions
+	// 	width: Dimensions.get('window').width / 4, // each button gets the 1 fourth width of device
+	// 	margin: 10
+	// },
 	input: {
 		width: 50,
 		textAlign: 'center'
