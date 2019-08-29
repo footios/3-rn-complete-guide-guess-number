@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, Dimensions, Text, ScrollView } from 'react-native';
 
 import BodyText from '../components/BodyText';
@@ -7,21 +7,39 @@ import Colors from '../constants/colors';
 import MainButton from '../components/MainButton';
 
 const GameOverScreen = (props) => {
+	const [ hideImage, setHideImage ] = useState(Dimensions.get('window').height < 500);
+
+	useEffect(() => {
+		const updateLayout = () => {
+			if (Dimensions.get('window').height < 500) {
+				setHideImage(true);
+			}
+		};
+
+		Dimensions.addEventListener('change', updateLayout);
+
+		return () => {
+			Dimensions.removeEventListener('change', updateLayout);
+		};
+	});
 	return (
 		<ScrollView contentContainerStyle={styles.screen}>
 			<TitleText>Game Over!</TitleText>
-			<View style={styles.imageContainer}>
-				<Image
-					style={styles.image}
-					resizeMode={'cover'}
-					fadeDuration={1000} // default: 300
-					// source={require('../assets/success.png')} // local image
-					source={{
-						uri:
-							'https://images.unsplash.com/photo-1454942901704-3c44c11b2ad1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80'
-					}}
-				/>
-			</View>
+			{hideImage ? null : (
+				<View style={styles.imageContainer}>
+					<Image
+						style={styles.image}
+						resizeMode={'cover'}
+						fadeDuration={1000} // default: 300
+						// source={require('../assets/success.png')} // local image
+						source={{
+							uri:
+								'https://images.unsplash.com/photo-1454942901704-3c44c11b2ad1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80'
+						}}
+					/>
+				</View>
+			)}
+
 			{/* Nested Texts receive the style of parents... */}
 			<View style={styles.resultContainer}>
 				<BodyText style={styles.resultText}>

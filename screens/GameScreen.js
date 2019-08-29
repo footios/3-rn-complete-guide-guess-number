@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, Alert, Dimensions, FlatList } from 'react-native';
+import { View, StyleSheet, Text, Alert, Dimensions, ScrollView, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { ScreenOrientation } from 'expo';
 
 import NumberContainer from '../components/NumberContainer';
 import DefaultStyles from '../constants/default-styles';
-import Card from '../components/Card'
+import Card from '../components/Card';
 import MainButton from '../components/MainButton';
 import BodyText from '../components/BodyText';
 
@@ -30,6 +31,11 @@ const renderListItem = (listLength, itemData) => (
 );
 
 const GameScreen = (props) => {
+
+	// You can lock the orientation when the app reaches a sertain point.
+	// ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+	ScreenOrientation.addOrientationChangeListener
+
 	const initialGuess = generateRandomBetween(1, 100, props.userChoice);
 
 	const [ currentGuess, setCurrentGuess ] = useState(initialGuess);
@@ -92,9 +98,9 @@ const GameScreen = (props) => {
 		listContainerStyle = styles.listContainerBig;
 	}
 
-	if (availableDeviceHeight > 500) {
+	if (availableDeviceHeight < 500) {
 		return (
-			<View style={styles.screen}>
+			<ScrollView contentContainerStyle={styles.screen}>
 				<Text style={DefaultStyles.title}>Opponent's Guess: </Text>
 				<View style={styles.controls}>
 					<View style={styles.button}>
@@ -126,12 +132,12 @@ const GameScreen = (props) => {
 					{pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}
 				</ScrollView> */}
 				</View>
-			</View>
+			</ScrollView>
 		);
 	}
 
 	return (
-		<View style={styles.screen}>
+		<ScrollView contentContainerStyle={styles.screen}>
 			<Text style={DefaultStyles.title}>Opponent's Guess: </Text>
 			<NumberContainer>{currentGuess}</NumberContainer>
 			<Card style={styles.buttonContainer}>
@@ -162,7 +168,7 @@ const GameScreen = (props) => {
 					{pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}
 				</ScrollView> */}
 			</View>
-		</View>
+		</ScrollView>
 	);
 };
 
