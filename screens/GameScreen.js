@@ -3,8 +3,8 @@ import { View, StyleSheet, Text, Alert, Dimensions, FlatList } from 'react-nativ
 import { Ionicons } from '@expo/vector-icons';
 
 import NumberContainer from '../components/NumberContainer';
-import Card from '../components/Card';
 import DefaultStyles from '../constants/default-styles';
+import Card from '../components/Card'
 import MainButton from '../components/MainButton';
 import BodyText from '../components/BodyText';
 
@@ -34,6 +34,8 @@ const GameScreen = (props) => {
 
 	const [ currentGuess, setCurrentGuess ] = useState(initialGuess);
 	const [ pastGuesses, setPastGuesses ] = useState([ initialGuess.toString() ]);
+	const [ availableDeviceWidth, setavailableDeviceWidth ] = useState(Dimensions.get('window').width);
+	const [ availableDeviceHeight, setavailableDeviceHeight ] = useState(Dimensions.get('window').height);
 	const currentLow = useRef(1);
 	const currentHigh = useRef(100);
 
@@ -48,6 +50,18 @@ const GameScreen = (props) => {
 		},
 		[ currentGuess, userChoice, onGameOver ]
 	);
+
+	useEffect(() => {
+		const updateLayout = () => {
+			setavailableDeviceWidth(Dimensions.get('window').width);
+			setavailableDeviceHeight(Dimensions.get('window').height);
+		};
+		Dimensions.addEventListener('change', updateLayout);
+
+		// Note: return, returns a function!!!
+		return () => Dimensions.removeEventListener('change', updateLayout);
+	});
+
 	const nextGuessHandler = (direction) => {
 		const shouldBeLower = direction === 'lower' && currentGuess < props.userChoice;
 		const shouldBeGreater = direction === 'greater' && currentGuess > props.userChoice;
@@ -74,9 +88,48 @@ const GameScreen = (props) => {
 	};
 
 	let listContainerStyle = styles.listContainer;
-	if (Dimensions.get('window').width > 350) {
+	if (availableDeviceWidth > 350) {
 		listContainerStyle = styles.listContainerBig;
 	}
+
+	if (availableDeviceHeight > 500) {
+		return (
+			<View style={styles.screen}>
+				<Text style={DefaultStyles.title}>Opponent's Guess: </Text>
+				<View style={styles.controls}>
+					<View style={styles.button}>
+						<MainButton onPress={nextGuessHandler.bind(this, 'lower')}>
+							<Ionicons name="md-remove-circle" size={35} color="white" />
+						</MainButton>
+					</View>
+					<NumberContainer>{currentGuess}</NumberContainer>
+					<View style={styles.button}>
+						<MainButton onPress={nextGuessHandler.bind(this, 'greater')}>
+							<Ionicons name="md-add-circle" size={35} color="white" />
+						</MainButton>
+					</View>
+				</View>
+
+				<View style={listContainerStyle}>
+					<FlatList
+						// use it if you don't know how many items...
+						// It expects objs with key and value pairs
+						keyExtractor={(item) => item} // we can do 'parseInt(item) + 1'
+						data={pastGuesses}
+						// renderItem expects only 1 arg, but with 'bind' we can add more....
+						// The 2nd arg will be the 1st received be the func
+						renderItem={renderListItem.bind(this, pastGuesses.length)}
+						contentContainerStyle={styles.list}
+					/>
+					{/* we subtract the index from pastGuesses.length to have the last index by the last guess */}
+					{/* <ScrollView contentContainerStyle={styles.list}>
+					{pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}
+				</ScrollView> */}
+				</View>
+			</View>
+		);
+	}
+
 	return (
 		<View style={styles.screen}>
 			<Text style={DefaultStyles.title}>Opponent's Guess: </Text>
@@ -140,6 +193,12 @@ const styles = StyleSheet.create({
 		marginVertical: 10,
 		backgroundColor: 'white',
 		width: '100%'
+	},
+	controls: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		alignItems: 'center',
+		width: '80%'
 	},
 	listContainer: {
 		flex: 1, // this is to scroll on android
