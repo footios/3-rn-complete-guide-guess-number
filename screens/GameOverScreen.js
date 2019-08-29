@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Button, Text } from 'react-native';
+import { View, StyleSheet, Image, Dimensions, Text, ScrollView } from 'react-native';
 
 import BodyText from '../components/BodyText';
 import TitleText from '../components/TitleText';
@@ -8,7 +8,7 @@ import MainButton from '../components/MainButton';
 
 const GameOverScreen = (props) => {
 	return (
-		<View style={styles.screen}>
+		<ScrollView contentContainerStyle={styles.screen}>
 			<TitleText>Game Over!</TitleText>
 			<View style={styles.imageContainer}>
 				<Image
@@ -31,10 +31,8 @@ const GameOverScreen = (props) => {
 					<Text style={styles.highlight}> {props.userNumber} </Text>
 				</BodyText>
 			</View>
-			<MainButton onPress={props.onRestart} >
-				{'NEW GAME'}
-			</MainButton>
-		</View>
+			<MainButton onPress={props.onRestart}>{'NEW GAME'}</MainButton>
+		</ScrollView>
 	);
 };
 
@@ -48,13 +46,13 @@ const styles = StyleSheet.create({
 		// in order to have a perfect circle in android
 		// we need to put the width and heigt to be equal
 		// and the borderRadius at half of their value
-		width: 300,
-		height: 300,
-		borderRadius: 150,
+		width: Dimensions.get('window').width * 0.7,
+		height: Dimensions.get('window').width * 0.7, // same height as width, to have a square...
+		borderRadius: 150, // halve of width height
 		borderWidth: 3,
 		borderColor: 'black',
 		overflow: 'hidden',
-		margin: 10
+		marginVertical: Dimensions.get('window').height / 30 // This sets it to 5% of device height
 	},
 	image: {
 		// put width and height to 100% and control image from imageContainer
@@ -67,11 +65,11 @@ const styles = StyleSheet.create({
 	},
 	resultContainer: {
 		marginHorizontal: 50,
-		marginVertical: 15
+		marginVertical: Dimensions.get('window').height / 60
 	},
 	resultText: {
 		textAlign: 'center',
-		fontSize: 20
+		fontSize: Dimensions.get('window').height < 400 ? 16 : 20
 	}
 });
 
