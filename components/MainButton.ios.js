@@ -4,30 +4,21 @@ import { View, StyleSheet, Text, TouchableOpacity, TouchableNativeFeedback, Plat
 import Colors from '../constants/colors';
 
 const MainButton = (props) => {
-	// We can set a variable starting with a Capital letter,
-	// which we then can use as a JSX element.
-	let ButtonComponent = TouchableOpacity;
 
-	// Only Android Version 21 and higher supports the ripple effect.
-	if (Platform.OS == 'android' && Platform.Version >= 21) {
-		ButtonComponent = TouchableNativeFeedback;
-	}
+	// Use MainButton.ios.js and MainButton.android.js 
+	// and delete all the Platform.OS checks.
+	// RN automatically choses the right file... 
+	// Note: Here we don't really need the spit into 2 files... 
 	return (
-		<View style={styles.buttonContainer} >
-		<ButtonComponent activeOpacity={0.6} onPress={props.onPress}>
+		<TouchableOpacity activeOpacity={0.6} onPress={props.onPress}>
 			<View style={styles.button}>
 				<Text style={styles.buttonText}>{props.children}</Text>
 			</View>
-		</ButtonComponent>
-		</View>
+		</TouchableOpacity>
 	);
 };
 
 const styles = StyleSheet.create({
-	buttonContainer: {
-		borderRadius: 20,
-		overflow: 'hidden' // no child component can go over it 
-	},
 	button: {
 		backgroundColor: Colors.primary,
 		paddingVertical: 12,
