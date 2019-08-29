@@ -40,8 +40,8 @@ const GameScreen = (props) => {
 
 	const [ currentGuess, setCurrentGuess ] = useState(initialGuess);
 	const [ pastGuesses, setPastGuesses ] = useState([ initialGuess.toString() ]);
-	const [ availableDeviceWidth, setavailableDeviceWidth ] = useState(Dimensions.get('window').width);
-	const [ availableDeviceHeight, setavailableDeviceHeight ] = useState(Dimensions.get('window').height);
+	const [ availableDeviceWidth, setAvailableDeviceWidth ] = useState(Dimensions.get('window').width);
+	const [ availableDeviceHeight, setAvailableDeviceHeight ] = useState(Dimensions.get('window').height);
 	const currentLow = useRef(1);
 	const currentHigh = useRef(100);
 
@@ -59,8 +59,8 @@ const GameScreen = (props) => {
 
 	useEffect(() => {
 		const updateLayout = () => {
-			setavailableDeviceWidth(Dimensions.get('window').width);
-			setavailableDeviceHeight(Dimensions.get('window').height);
+			setAvailableDeviceWidth(Dimensions.get('window').width);
+			setAvailableDeviceHeight(Dimensions.get('window').height);
 		};
 		Dimensions.addEventListener('change', updateLayout);
 

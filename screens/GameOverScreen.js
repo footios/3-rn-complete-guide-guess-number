@@ -13,6 +13,9 @@ const GameOverScreen = (props) => {
 		const updateLayout = () => {
 			if (Dimensions.get('window').height < 500) {
 				setHideImage(true);
+			} else {
+				setHideImage(false);
+
 			}
 		};
 
