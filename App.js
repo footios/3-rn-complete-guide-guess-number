@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 
@@ -7,7 +7,6 @@ import Header from './components/Header';
 import StartGameScreen from './screens/StartGameScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
-
 
 const fetchFonts = () => {
 	// returns a promise
@@ -24,10 +23,13 @@ export default function App() {
 
 	if (!dataLoaded) {
 		// AppLoading prolongs the splash screen...
-		return <AppLoading 
-		startAsync={fetchFonts} // point at operation to start on 1st render
-		onFinish={() => setDataLoaded(true)} 
-		onError={() => console.log(err)} />
+		return (
+			<AppLoading
+				startAsync={fetchFonts} // point at operation to start on 1st render
+				onFinish={() => setDataLoaded(true)}
+				onError={() => console.log(err)}
+			/>
+		);
 	}
 
 	const configureNewGameHandler = () => {
@@ -54,10 +56,12 @@ export default function App() {
 	}
 
 	return (
-		<View style={styles.screen}>
-			<Header title="Guess a number " />
-			{content}
-		</View>
+		// SafeAreaView must be at the most top component,
+		// thus: App.
+		<SafeAreaView style={styles.screen} >
+				<Header title="Guess a number " />
+				{content}
+		</SafeAreaView>
 	);
 }
 
