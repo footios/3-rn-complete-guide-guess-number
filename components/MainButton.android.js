@@ -7,7 +7,7 @@ const MainButton = (props) => {
 	// We can set a variable starting with a Capital letter,
 	// which we then can use as a JSX element.
 	// We still need `TouchableOpacity`
-	// in case the app runs in a lower version of 21.
+	// in case the app runs in a lower android version of 21.
 	let ButtonComponent = TouchableOpacity;
 
 	// Only Android Version 21 and higher supports the ripple effect.

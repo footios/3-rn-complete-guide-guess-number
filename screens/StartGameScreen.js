@@ -19,19 +19,21 @@ import BodyText from '../components/BodyText';
 import TitleText from '../components/TitleText';
 import MainButton from '../components/MainButton';
 
-// Bug: The width of our buttons get locked-in at start
-// and don't adjust when the screen size changes (landscape/portrait).
-
+// "Bug": The width of our buttons gets locked-in at start
+// and doesn't adjust when the screen size changes (landscape/portrait).
+// So we use an `addEventListener`
 const StartGameScreen = (props) => {
 	const [ enteredValue, setEnteredValue ] = useState('');
 	const [ confirmed, setConfirmed ] = useState(false);
 	const [ selectedNumber, setSelectedNumber ] = useState();
 	const [ buttonWidth, setButtonWidth ] = useState(Dimensions.get('window').width / 4);
 
+	// If input is not a number, replace it with an empty space.
 	const numberInputHandler = (inputText) => {
 		setEnteredValue(inputText.replace(/[^0-9]/g, ''));
 	};
 
+	// Resets the input when the `Reset` button is pressed.
 	const resetInputHandler = () => {
 		setEnteredValue('');
 		setConfirmed(false);
@@ -46,7 +48,6 @@ const StartGameScreen = (props) => {
 			// so they will adjust on the device orientation
 			setButtonWidth(Dimensions.get('window').width / 4);
 		};
-
 		Dimensions.addEventListener('change', updateLayout);
 
 		// clean up in `return`
@@ -56,6 +57,7 @@ const StartGameScreen = (props) => {
 		};
 	});
 
+	// Confirms the input, when `Confirm` button is pressed.
 	const confirmInputHandler = () => {
 		const chosenNumber = parseInt(enteredValue);
 		if (isNaN(chosenNumber) || (chosenNumber <= 0) | (chosenNumber > 99)) {
@@ -68,9 +70,9 @@ const StartGameScreen = (props) => {
 			]);
 			return;
 		}
-		setConfirmed(true);
+		setConfirmed(true); // If true `confirmedOutput` will be rendered.
 		setSelectedNumber(chosenNumber);
-		setEnteredValue('');
+		setEnteredValue(''); // Resets `TextInput`
 		Keyboard.dismiss();
 	};
 
@@ -87,7 +89,8 @@ const StartGameScreen = (props) => {
 
 	return (
 		<ScrollView>
-			{/* 'position' works better on iOS and 'padding' on android */}
+			{/* 'position' works better on iOS and 'padding' on android 
+			keyboardVerticalOffset = set distance between keyboard and TextInput */}
 			<KeyboardAvoidingView behavior="position" keyboardVerticalOffset={30}>
 				<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 					<View style={styles.screen}>

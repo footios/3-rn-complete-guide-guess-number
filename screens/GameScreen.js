@@ -64,7 +64,7 @@ const GameScreen = (props) => {
 		};
 		Dimensions.addEventListener('change', updateLayout);
 
-		// Note: return, returns a function!!!
+		// Note: `return`, returns a function!!!
 		return () => Dimensions.removeEventListener('change', updateLayout);
 	});
 
@@ -98,6 +98,7 @@ const GameScreen = (props) => {
 		listContainerStyle = styles.listContainerBig;
 	}
 
+	// Change layout: put buttons and currentGuess in a row (for landscape).
 	if (availableDeviceHeight < 500) {
 		return (
 			<ScrollView contentContainerStyle={styles.screen}>
