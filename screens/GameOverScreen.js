@@ -1,59 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, Dimensions, Text, ScrollView } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
 
 import BodyText from '../components/BodyText';
 import TitleText from '../components/TitleText';
-import Colors from '../constants/colors';
 import MainButton from '../components/MainButton';
+import Colors from '../constants/colors';
 
 const GameOverScreen = (props) => {
-	const [ hideImage, setHideImage ] = useState(Dimensions.get('window').height < 500);
-
-	useEffect(() => {
-		const updateLayout = () => {
-			if (Dimensions.get('window').height < 500) {
-				setHideImage(true);
-			} else {
-				setHideImage(false);
-
-			}
-		};
-
-		Dimensions.addEventListener('change', updateLayout);
-
-		return () => {
-			Dimensions.removeEventListener('change', updateLayout);
-		};
-	});
 	return (
-		<ScrollView contentContainerStyle={styles.screen}>
-			<TitleText>Game Over!</TitleText>
-			{hideImage ? null : (
+			<ScrollView contentContainerStyle={styles.screen}>
+				<TitleText>The Game is Over!</TitleText>
 				<View style={styles.imageContainer}>
 					<Image
+						source={require('../assets/success.png')}
+						// source={{
+						//   uri:
+						//     'https://cdn.pixabay.com/photo/2016/05/05/23/52/mountain-summit-1375015_960_720.jpg'
+						// }}
 						style={styles.image}
-						resizeMode={'cover'}
-						fadeDuration={1000} // default: 300
-						// source={require('../assets/success.png')} // local image
-						source={{
-							uri:
-								'https://images.unsplash.com/photo-1454942901704-3c44c11b2ad1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80'
-						}}
+						resizeMode="cover"
 					/>
 				</View>
-			)}
+				<View style={styles.resultContainer}>
+					<BodyText style={styles.resultText}>
+						Your phone needed <Text style={styles.highlight}>{props.roundsNumber}</Text> rounds to guess the
+						number <Text style={styles.highlight}>{props.userNumber}</Text>.
+					</BodyText>
+				</View>
 
-			{/* Nested Texts receive the style of parents... */}
-			<View style={styles.resultContainer}>
-				<BodyText style={styles.resultText}>
-					Your phone needed
-					<Text style={styles.highlight}> {props.roundsNumber} </Text>
-					rounds to guess number
-					<Text style={styles.highlight}> {props.userNumber} </Text>
-				</BodyText>
-			</View>
-			<MainButton onPress={props.onRestart}>{'NEW GAME'}</MainButton>
-		</ScrollView>
+				<MainButton onPress={props.onRestart}>NEW GAME</MainButton>
+			</ScrollView>
 	);
 };
 
@@ -61,36 +37,33 @@ const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		paddingVertical: 10
 	},
 	imageContainer: {
-		// in order to have a perfect circle in android
-		// we need to put the width and heigt to be equal
-		// and the borderRadius at half of their value
 		width: Dimensions.get('window').width * 0.7,
-		height: Dimensions.get('window').width * 0.7, // same height as width, to have a square...
-		borderRadius: 150, // halve of width height
+		height: Dimensions.get('window').width * 0.7,
+		borderRadius: Dimensions.get('window').width * 0.7 / 2,
 		borderWidth: 3,
 		borderColor: 'black',
 		overflow: 'hidden',
-		marginVertical: Dimensions.get('window').height / 30 // This sets it to 5% of device height
+		marginVertical: Dimensions.get('window').height / 30
 	},
 	image: {
-		// put width and height to 100% and control image from imageContainer
 		width: '100%',
 		height: '100%'
 	},
-	highlight: {
-		color: Colors.primary,
-		fontFamily: 'open-sans-bold'
-	},
 	resultContainer: {
-		marginHorizontal: 50,
+		marginHorizontal: 30,
 		marginVertical: Dimensions.get('window').height / 60
 	},
 	resultText: {
 		textAlign: 'center',
 		fontSize: Dimensions.get('window').height < 400 ? 16 : 20
+	},
+	highlight: {
+		color: Colors.primary,
+		fontFamily: 'open-sans-bold'
 	}
 });
 
