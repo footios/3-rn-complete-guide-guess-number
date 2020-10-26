@@ -102,9 +102,6 @@ const GameScreen = props => {
       currentGuess
     );
     setCurrentGuess(nextNumber);
-    // currentGuess wouldn't work, because React wouldn't have updated
-    // the state and rebuild the component
-    // By mistake I had ...pastGuesses and it worked!
     setPastGuesses(curPastGuesses => [
       nextNumber.toString(),
       ...curPastGuesses
@@ -156,7 +153,7 @@ const GameScreen = props => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.screen}>
+    <View style={styles.screen}>
       <Text style={DefaultStyles.title}>Opponent's Guess: </Text>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card style={styles.buttonContainer}>
@@ -179,7 +176,7 @@ const GameScreen = props => {
           data={pastGuesses}
           // renderItem expects only 1 arg, but with 'bind' we can add more....
           // The 2nd arg will be the 1st received be the func
-          renderItem={renderListItem.bind(this, pastGuesses.length)}
+          renderItem={renderListItem.bind(this, pastGuesses.length - 1)}
           contentContainerStyle={styles.list}
         />
         {/* we subtract the index from pastGuesses.length to have the last index by the last guess */}
@@ -187,7 +184,7 @@ const GameScreen = props => {
 					{pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}
 				</ScrollView> */}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
